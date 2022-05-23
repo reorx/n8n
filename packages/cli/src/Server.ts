@@ -1304,7 +1304,7 @@ class App {
 				const oauthRequestData = {
 					oauth_callback: `${WebhookHelpers.getWebhookBaseUrl()}${
 						this.restEndpoint
-					}/oauth1-credential/callback?cid=${credentialId}`,
+					}/oauth1-credential/callback?state=${credentialId}`,
 				};
 
 				await this.externalHooks.run('oauth1.authenticate', [oAuthOptions, oauthRequestData]);
@@ -1365,7 +1365,7 @@ class App {
 			`/${this.restEndpoint}/oauth1-credential/callback`,
 			async (req: OAuthRequest.OAuth1Credential.Callback, res: express.Response) => {
 				try {
-					const { oauth_verifier, oauth_token, cid: credentialId } = req.query;
+					const { oauth_verifier, oauth_token, state: credentialId } = req.query;
 
 					if (!oauth_verifier || !oauth_token) {
 						const errorResponse = new ResponseHelper.ResponseError(
@@ -1478,7 +1478,7 @@ class App {
 				} catch (error) {
 					LoggerProxy.error('OAuth1 callback failed because of insufficient user permissions', {
 						userId: req.user?.id,
-						credentialId: req.query.cid,
+						credentialId: req.query.state,
 					});
 					// Error response
 					return ResponseHelper.sendErrorResponse(res, error);
