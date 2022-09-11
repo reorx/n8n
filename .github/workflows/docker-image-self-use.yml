@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - self-use
+    tags:
+      - 'upstream-*'
 
 env:
-  IMAGE_TAG: n8n-custom
+  IMAGE_NAME: n8n-custom
 
 jobs:
   build:
@@ -29,4 +31,4 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_TAG }}
+            ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
